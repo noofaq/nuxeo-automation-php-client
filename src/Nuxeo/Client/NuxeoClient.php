@@ -201,7 +201,8 @@ class NuxeoClient {
 
     $this->interceptors[] = new SimpleInterceptor(
       function(Request $request) use ($self, $name, $value) {
-        $request->addHeader($name, $value);
+      //PN: fixing issue with multiple adding same header
+        $request->setHeader($name, $value);
       }
     );
 
