@@ -22,7 +22,6 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\Reader;
 use Guzzle\Common\Exception\GuzzleException;
-use Guzzle\Plugin\Log\LogPlugin;
 use Nuxeo\Client\Auth\BasicAuthentication;
 use Nuxeo\Client\Marshaller;
 use Nuxeo\Client\Objects\Blob\Blob;
@@ -35,7 +34,6 @@ use Nuxeo\Client\Spi\Interceptor;
 use Nuxeo\Client\Spi\NuxeoClientException;
 use Nuxeo\Client\Spi\NuxeoException;
 use Nuxeo\Client\Spi\SimpleInterceptor;
-use Nuxeo\Client\Util\HttpUtils;
 use Zend\Uri\Exception\InvalidUriPartException;
 use Zend\Uri\Http as HttpUri;
 
@@ -141,6 +139,18 @@ class NuxeoClient {
    */
   public function schemas() {
     $this->header(Constants::HEADER_PROPERTIES, implode(',', func_get_args()));
+    return $this;
+  }
+
+  /**
+   * HINT: sniffed available values: permissions, breadcrumb, preview, favorites, subscribedNotifications, thumbnail,
+   *                renditions, pendingTasks, runnableWorkflows, runningWorkflows, collections, audit, subtypes, tags
+   *
+   * @param string ...
+   * @return NuxeoClient
+   */
+  public function enrichers() {
+    $this->header(Constants::HEADER_DOCUMENT_ENRICHERS, implode(',', func_get_args()));
     return $this;
   }
 

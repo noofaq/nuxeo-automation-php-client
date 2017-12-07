@@ -110,6 +110,12 @@ class Document extends NuxeoEntity {
   private $properties;
 
   /**
+   * @var mixed[]
+   * @Serializer\Type("array")
+   */
+  private $contextParameters = [];
+
+  /**
    * @var string[]
    * @Serializer\Type("array<string>")
    */
@@ -159,6 +165,33 @@ class Document extends NuxeoEntity {
    */
   public function setProperty($name, $value) {
     $this->properties[$name] = $value;
+    return $this;
+  }
+
+  /**
+   * @param $name
+   * @param $type
+   * @return string|mixed
+   */
+  public function getContextParameter($name, $type = null) {
+    if(array_key_exists($name, $this->contextParameters)) {
+      if(null !== $type && $this->getNuxeoClient()) {
+        return $this->getNuxeoClient()->getConverter()->readData($this->contextParameters[$name], $type);
+      } else {
+        return $this->contextParameters[$name];
+      }
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * @param string $name
+   * @param mixed $value
+   * @return self
+   */
+  public function setContextParameter($name, $value) {
+    $this->contextParameters[$name] = $value;
     return $this;
   }
 
@@ -427,5 +460,23 @@ class Document extends NuxeoEntity {
     $this->properties = $properties;
     return $this;
   }
+
+    /**
+     * @param mixed[] $contextParameters
+     * @return Document
+     */
+    public function setContextParameters($contextParameters)
+    {
+        $this->contextParameters = $contextParameters;
+        return $this;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function getContextParameters()
+    {
+        return $this->contextParameters;
+    }
 
 }
